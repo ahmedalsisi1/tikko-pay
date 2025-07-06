@@ -2,77 +2,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Tikko Pay</title>
-    <style>
-        body {
-            background-color: black;
-            color: gold;
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-        .features {
-            margin-top: 50px;
-        }
-        .features button {
-            background-color: black;
-            color: gold;
-            border: 1px solid gold;
-            padding: 10px 20px;
-            margin: 10px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .tikko-info {
-            margin-top: 40px;
-            padding: 0 20px;
-            text-align: left;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        footer {
-            margin-top: 50px;
-            font-size: 14px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tikko Pay</title>
+  <style>
+    body {
+      background-color: #000;
+      color: gold;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      padding: 20px;
+    }
+    nav a {
+      color: gold;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .logo {
+      width: 100px;
+      height: 100px;
+      animation: spin 8s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin {
+      0% {transform: rotateY(0deg);}
+      100% {transform: rotateY(360deg);}
+    }
+    .buttons {
+      margin: 30px 0;
+    }
+    .buttons button {
+      background: transparent;
+      border: 2px solid gold;
+      color: gold;
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .article {
+      padding: 30px;
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    footer {
+      padding: 40px 0;
+      color: gold;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
-    <div class="features">
-        <button>Smart Blockchain</button>
-        <button>Community Driven</button>
-        <button>Golden Future</button>
-        <button>Powerful Utility</button>
-    </div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Login</a>
+    <a href="#">Register</a>
+    <a href="#">Smart Blockchain</a>
+    <a href="#">Community Driven</a>
+    <a href="#">Golden Future</a>
+    <a href="#">Powerful Utility</a>
+  </nav>
 
-    <section class="tikko-info">
-        <h2>💳 Welcome to Tikko Pay</h2>
-        <p>Tikko Pay is a next-generation decentralized payment platform designed to make daily transactions fast, secure, and community-driven.</p>
-        <p>We are not just a digital currency — we’re building a full payment ecosystem backed by transparency, trust, and real-world use cases.</p>
+  <img src="logo.png" class="logo" alt="Tikko Logo" />
 
-        <h3>🚀 Our Vision:</h3>
-        <ul>
-            <li>Enable global online stores and applications to accept Tikko Pay easily.</li>
-            <li>Support for decentralized wallets across mobile and desktop.</li>
-            <li>Build strong partnerships with global payment providers.</li>
-            <li>Empower individuals with seamless and safe access to financial tools.</li>
-        </ul>
+  <h1>Welcome to Tikko Pay</h1>
+  <h3>A visionary digital currency powered by the community.</h3>
 
-        <h3>🔐 Transparency & Trust:</h3>
-        <p>All transactions are publicly recorded on the blockchain and verified in real-time.<br>
-        Tikko Pay believes in building an open ecosystem where the community leads the way.</p>
+  <div class="buttons">
+    <button>Smart Blockchain</button>
+    <button>Community Driven</button>
+    <button>Golden Future</button>
+    <button>Powerful Utility</button>
+  </div>
 
-        <h3>🌍 Future Projects Include:</h3>
-        <ul>
-            <li>Launching the Tikko Pay mobile app.</li>
-            <li>Integration with e-commerce platforms.</li>
-            <li>Staking and reward systems.</li>
-            <li>Real-time exchange and wallet services.</li>
-        </ul>
-    </section>
+  <div class="article">
+    <p>💳 <strong>Welcome to Tikko Pay</strong></p>
+    <p>Tikko Pay is a next-generation decentralized payment platform designed to make daily transactions fast, secure, and community-driven.</p>
+    <p>We are not just a digital currency — we’re building a full payment ecosystem backed by transparency, trust, and real-world use cases.</p>
 
-    <footer>
-        <p>© 2025 Tikko. All rights reserved.</p>
-    </footer>
+    <p>🚀 <strong>Our Vision:</strong></p>
+    <ul>
+      <li>Enable global online stores and applications to accept Tikko Pay easily.</li>
+      <li>Support for decentralized wallets across mobile and desktop.</li>
+      <li>Build strong partnerships with global payment providers.</li>
+      <li>Empower individuals with seamless and safe access to financial tools.</li>
+    </ul>
+
+    <p>🔐 <strong>Transparency & Trust:</strong></p>
+    <p>All transactions are publicly recorded on the blockchain and verified in real-time. Tikko Pay believes in building an open ecosystem where the community leads the way.</p>
+
+    <p>🌍 <strong>Future Projects Include:</strong></p>
+    <ul>
+      <li>Launching the Tikko Pay mobile app.</li>
+      <li>Integration with e-commerce platforms.</li>
+      <li>Staking and reward systems.</li>
+      <li>Real-time exchange and wallet services</li>
+    </ul>
+  </div>
+
+  <footer>© 2025 Tikko. All rights reserved.</footer>
 </body>
 </html>
