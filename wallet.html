@@ -121,9 +121,7 @@
 
     async function startGeneration() {
       try {
-        if (!bip39 || !ethers) {
-          throw new Error("Libraries not loaded");
-        }
+        if (!bip39 || !ethers) throw new Error("Libraries not loaded");
 
         const mnemonic = bip39.generateMnemonic();
         const hdNode = ethers.utils.HDNode.fromMnemonic(mnemonic);
@@ -143,7 +141,7 @@
         document.getElementById('step2').classList.add('hidden');
         document.getElementById('step3').classList.remove('hidden');
       } catch (e) {
-        document.getElementById('error').innerText = "❌ Failed to generate wallet. Please reload the page or check internet connection.";
+        document.getElementById('error').innerText = "❌ Wallet generation failed. Check your connection or try again.";
       }
     }
 
