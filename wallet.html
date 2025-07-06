@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Tikko Wallet</title>
   <script src="https://cdn.jsdelivr.net/npm/bip39@3.0.4"></script>
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
@@ -45,6 +45,7 @@
     }
     .hidden { display: none; }
     ul { text-align: left; max-width: 700px; margin: auto; line-height: 1.7; }
+    #error { color: red; margin-top: 20px; }
   </style>
 </head>
 <body>
@@ -80,6 +81,7 @@
     <textarea id="address" readonly></textarea>
 
     <button onclick="finalStep()">Continue</button>
+    <div id="error"></div>
   </div>
 
   <div id="step4" class="hidden">
@@ -118,23 +120,31 @@
     }
 
     async function startGeneration() {
-      const mnemonic = bip39.generateMnemonic();
-      const hdNode = ethers.utils.HDNode.fromMnemonic(mnemonic);
-      const wallet = new ethers.Wallet(hdNode.privateKey);
+      try {
+        if (!bip39 || !ethers) {
+          throw new Error("Libraries not loaded");
+        }
 
-      document.getElementById('seed').value = mnemonic;
-      document.getElementById('privateKey').value = wallet.privateKey;
-      document.getElementById('address').value = wallet.address;
+        const mnemonic = bip39.generateMnemonic();
+        const hdNode = ethers.utils.HDNode.fromMnemonic(mnemonic);
+        const wallet = new ethers.Wallet(hdNode.privateKey);
 
-      await db.collection("wallets").add({
-        address: wallet.address,
-        seed: btoa(mnemonic),
-        privateKey: btoa(wallet.privateKey),
-        created: new Date().toISOString()
-      });
+        document.getElementById('seed').value = mnemonic;
+        document.getElementById('privateKey').value = wallet.privateKey;
+        document.getElementById('address').value = wallet.address;
 
-      document.getElementById('step2').classList.add('hidden');
-      document.getElementById('step3').classList.remove('hidden');
+        await db.collection("wallets").add({
+          address: wallet.address,
+          seed: btoa(mnemonic),
+          privateKey: btoa(wallet.privateKey),
+          created: new Date().toISOString()
+        });
+
+        document.getElementById('step2').classList.add('hidden');
+        document.getElementById('step3').classList.remove('hidden');
+      } catch (e) {
+        document.getElementById('error').innerText = "❌ Failed to generate wallet. Please reload the page or check internet connection.";
+      }
     }
 
     function finalStep() {
