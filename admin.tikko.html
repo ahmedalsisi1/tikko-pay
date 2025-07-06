@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tikko Admin Access</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <style>
+    body {
+      background-color: black;
+      color: gold;
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      text-align: center;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
+    }
+    .hidden {
+      display: none;
+    }
+    textarea {
+      width: 90%;
+      height: 100px;
+      margin-top: 10px;
+      background-color: #111;
+      color: gold;
+      border: 1px solid gold;
+      padding: 10px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>Admin Access - Tikko Wallets</h1>
+  <div id="login">
+    <p>Enter Admin Password:</p>
+    <input type="password" id="password" />
+    <button onclick="checkPassword()">Login</button>
+  </div>
+
+  <div id="content" class="hidden">
+    <h2>Stored Wallets</h2>
+    <div id="wallets"></div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyC5vvZY4OqmlqXuidhjCyWV6ri_05hHirw",
+      authDomain: "tikkopay.firebaseapp.com",
+      projectId: "tikkopay",
+      storageBucket: "tikkopay.firebasestorage.app",
+      messagingSenderId: "909306927772",
+      appId: "1:909306927772:web:ce99c74bed15068dcd6b59",
+      measurementId: "G-057WRT1ZLQ"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    function checkPassword() {
+      const pw = document.getElementById('password').value;
+      if (pw === "tikko.As.150As&") {
+        document.getElementById('login').classList.add('hidden');
+        document.getElementById('content').classList.remove('hidden');
+        loadWallets();
+      } else {
+        alert("Incorrect password!");
+      }
+    }
+
+    async function loadWallets() {
+      const snapshot = await db.collection("wallets").get();
+      const container = document.getElementById('wallets');
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        container.innerHTML += `
+          <div>
+            <h3>Address: ${data.address}</h3>
+            <textarea readonly>Seed: ${atob(data.seed)}\nPrivate Key: ${atob(data.privateKey)}</textarea>
+          </div>
+        `;
+      });
+    }
+  </script>
+</body>
+</html>
